@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class KillTarget : MonoBehaviour
 {
-    public GameObject target;
+    public GameObject[] targets;
     public ParticleSystem hitEffect;
     public GameObject killEffect;
     public float timeToSelect = 3.0f;
@@ -10,6 +10,7 @@ public class KillTarget : MonoBehaviour
 
     Transform camera;
     private float countDown;
+    private int targetIndex;
 
     void Start()
     {
@@ -26,10 +27,20 @@ public class KillTarget : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            if (hit.collider.gameObject == target)
+            for (int i = 0; i < targets.Length; i++)
             {
-                isHitting = true;
+                if(hit.collider.gameObject == targets[i])
+                {
+                    targetIndex = i;
+                    isHitting = true;
+                    break;
+                }
             }
+
+            //if (hit.collider.gameObject == targets[targetIndex])
+            //{
+            //    isHitting = true;
+            //}
         }
 
         if (isHitting)
@@ -38,7 +49,6 @@ public class KillTarget : MonoBehaviour
             {
                 // on target 
                 countDown -= Time.deltaTime;
-                // print (countDown); 
                 hitEffect.transform.position = hit.point;
                 if (hitEffect.isStopped)
                 {
@@ -48,7 +58,7 @@ public class KillTarget : MonoBehaviour
             else
             {
                 // killed 
-                Instantiate(killEffect, target.transform.position, target.transform.rotation);
+                Instantiate(killEffect, targets[targetIndex].transform.position, targets[targetIndex].transform.rotation);
                 score += 1;
                 countDown = timeToSelect;
                 SetRandomPosition();
@@ -66,6 +76,6 @@ public class KillTarget : MonoBehaviour
     {
         float x = Random.Range(-5.0f, 5.0f);
         float z = Random.Range(-5.0f, 5.0f);
-        target.transform.position = new Vector3(x, 0.0f, z);
+        targets[targetIndex].transform.position = new Vector3(x, 0.0f, z);
     }
 }

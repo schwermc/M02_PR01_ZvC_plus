@@ -27,7 +27,6 @@ public class LookMoveTo : MonoBehaviour
             hitObject = hit.collider.gameObject;
             if (hitObject == ground)
             {
-                // Debug.Log("Hit (x,y,z): " + hit.point.ToString("F2"));
                 transform.position = hit.point;
             }
         }
